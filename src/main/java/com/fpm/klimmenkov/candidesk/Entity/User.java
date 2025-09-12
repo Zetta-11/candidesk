@@ -1,5 +1,6 @@
 package com.fpm.klimmenkov.candidesk.Entity;
 
+import com.fpm.klimmenkov.candidesk.Entity.status.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -44,8 +45,9 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "roles", length = 20, nullable = false)
-    private String roles;
+    private UserStatus roles;
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vacancy> vacancies;
