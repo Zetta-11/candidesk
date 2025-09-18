@@ -40,9 +40,9 @@ It provides tools for managing candidates, vacancies, interviews, and tasks in o
 
 ## 🏗️ Tech Stack
 
-- **Backend:** Java 17, Spring Boot, Spring Data JPA, Hibernate
-- **Frontend:** React, HTML, CSS, Bootstrap
-- **Database:** PostgreSQL (or MySQL)
+- **Backend:** Java 17, Spring Boot, Spring Data JPA, Hibernate, Spring Security
+- **Frontend:** React, HTML, CSS, Bootstrap, Axios
+- **Database:** MySQL
 - **Build Tool:** Maven
 - **Version Control:** Git & GitHub
 
