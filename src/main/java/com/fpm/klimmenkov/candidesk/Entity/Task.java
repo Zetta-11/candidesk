@@ -1,5 +1,6 @@
 package com.fpm.klimmenkov.candidesk.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fpm.klimmenkov.candidesk.Entity.status.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to", nullable = false)
+    @JsonBackReference
     private User assignedTo;
 
     @ManyToOne(fetch = FetchType.LAZY)
