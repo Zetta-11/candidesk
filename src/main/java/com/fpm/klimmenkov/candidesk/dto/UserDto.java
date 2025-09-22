@@ -1,13 +1,8 @@
 package com.fpm.klimmenkov.candidesk.dto;
 
-import com.fpm.klimmenkov.candidesk.Entity.Interview;
-import com.fpm.klimmenkov.candidesk.Entity.Vacancy;
-import com.fpm.klimmenkov.candidesk.Entity.status.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

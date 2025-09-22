@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { listUsers, updateUserRequest } from '../services/UserService';
+import { listUsers, updateUserRequest, createUserRequest } from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
 import { checkAuthService } from '../services/AuthService'; 
 
@@ -7,6 +7,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [isCreating, setIsCreating] = useState(false); // нове для створення
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -37,6 +38,14 @@ const Users = () => {
 
   const openEditModal = (user) => {
     setEditingUser(user);
+    setIsCreating(false);
+    setErrors({});
+    setShowModal(true);
+  };
+
+  const openCreateModal = () => {
+    setEditingUser({ login: '', password: '', firstName: '', lastName: '', role: 'USER' });
+    setIsCreating(true);
     setErrors({});
     setShowModal(true);
   };
@@ -57,13 +66,17 @@ const Users = () => {
 
   const handleSave = () => {
     setErrors({});
-    updateUserRequest(editingUser.id, editingUser)
+    const request = isCreating
+      ? createUserRequest(editingUser)
+      : updateUserRequest(editingUser.id, editingUser);
+
+    request
       .then(() => {
         getAllUsers();
         closeModal();
       })
       .catch(err => {
-        console.error(err); // тепер логуємо помилки
+        console.error(err);
         if (err.response && err.response.data) {
           setErrors(err.response.data);
         } else {
@@ -75,6 +88,7 @@ const Users = () => {
   return (
     <div className="container">
       <h1 className='text-center'>List of users</h1>
+      <button className="btn btn-success mb-3" onClick={openCreateModal}>Add User</button>
       <table className='table table-striped table-bordered'>
         <thead>
           <tr>
@@ -83,9 +97,7 @@ const Users = () => {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Role</th>
-            <th>Vacancies</th>
-            {/* <th>Interviews</th>
-            <th>Actions</th> */}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -96,8 +108,6 @@ const Users = () => {
               <td>{u.firstName}</td>
               <td>{u.lastName}</td>
               <td>{u.role}</td>
-              {/* <td>{u.vacancies.length}</td>
-              <td>{u.interviews.length}</td> */}
               <td>
                 <button className='btn btn-info' onClick={() => openEditModal(u)}>Edit</button>
               </td>
@@ -112,11 +122,36 @@ const Users = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Edit User: {editingUser.login}</h5>
+                <h5 className="modal-title">{isCreating ? 'Create User' : `Edit User: ${editingUser.login}`}</h5>
                 <button type="button" className="btn-close" onClick={closeModal}></button>
               </div>
               <div className="modal-body">
                 {errors.general && <div className="alert alert-danger">{errors.general}</div>}
+                <div className="mb-3">
+                  <label className="form-label">Login</label>
+                  <input
+                    type="text"
+                    className={`form-control ${errors.login ? 'is-invalid' : ''}`}
+                    name="login"
+                    value={editingUser.login || ''}
+                    onChange={handleChange}
+                    disabled={!isCreating} // не змінюємо логін при редагуванні
+                  />
+                  {errors.login && <div className="invalid-feedback">{errors.login}</div>}
+                </div>
+                {isCreating && (
+                  <div className="mb-3">
+                    <label className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                      name="password"
+                      value={editingUser.password || ''}
+                      onChange={handleChange}
+                    />
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                  </div>
+                )}
                 <div className="mb-3">
                   <label className="form-label">First Name</label>
                   <input
@@ -154,7 +189,9 @@ const Users = () => {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={closeModal}>Close</button>
-                <button className="btn btn-primary" onClick={handleSave}>Save changes</button>
+                <button className="btn btn-primary" onClick={handleSave}>
+                  {isCreating ? 'Create' : 'Save changes'}
+                </button>
               </div>
             </div>
           </div>
