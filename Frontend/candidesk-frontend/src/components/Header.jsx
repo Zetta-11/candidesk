@@ -27,6 +27,7 @@ const Header = () => {
         <ul className="navbar-nav">
           <li className="nav-item"><NavLink className="nav-link" to="/home">Home</NavLink></li>
           <li className="nav-item"><NavLink className="nav-link" to="/about">About</NavLink></li>
+          <li className="nav-item"><NavLink className="nav-link" to="/users">All Users</NavLink></li>
         </ul>
         <div className="ms-auto">
           {isAuthenticated ? (

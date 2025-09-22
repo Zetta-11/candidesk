@@ -12,3 +12,24 @@ export const listUsers = () => {
     }
   });
 };
+
+// Видалити користувача
+export const deleteUser = (id) => {
+    const token = getToken();
+    return axios.delete(`${REST_API_BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+  };
+  
+  // Оновити користувача
+  export const updateUserRequest = (id, userData) => {
+    const token = getToken();
+    return axios.put(`${REST_API_BASE_URL}/${id}`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  };

@@ -1,6 +1,7 @@
 package com.fpm.klimmenkov.candidesk.service.impl;
 
 import com.fpm.klimmenkov.candidesk.Entity.User;
+import com.fpm.klimmenkov.candidesk.Entity.status.UserStatus;
 import com.fpm.klimmenkov.candidesk.dto.UserDto;
 import com.fpm.klimmenkov.candidesk.dto.mapper.UserMapper;
 import com.fpm.klimmenkov.candidesk.exception.ResourceNotFoundException;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setLogin(userDto.getLogin());
         existingUser.setFirstName(userDto.getFirstName());
         existingUser.setLastName(userDto.getLastName());
+        existingUser.setRoles(UserStatus.valueOf(userDto.getRole()));
         userRepository.save(existingUser);
 
         return existingUser;
