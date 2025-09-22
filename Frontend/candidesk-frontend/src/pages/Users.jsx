@@ -19,11 +19,16 @@ const UsersComponent = () => {
     verifyLogin();
   }, [navigate]);
 
-  function getAllUsers() {
+  const getAllUsers = () => {
     listUsers()
       .then((r) => setUsers(r.data))
-      .catch((error) => console.error(error));
-  }
+      .catch((error) => {
+        console.error(error);
+        if (error.response && error.response.status === 401) {
+          navigate("/login");
+        }
+      });
+  };
 
   return (
     <div className="container">
