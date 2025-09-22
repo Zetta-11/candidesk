@@ -40,6 +40,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_vacancy")
+    @JsonBackReference
     private Vacancy relatedVacancy;
 
     @Column(name = "due_date")

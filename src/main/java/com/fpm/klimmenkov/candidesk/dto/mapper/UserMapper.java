@@ -18,13 +18,13 @@ public class UserMapper {
         dto.setLastName(user.getLastName());
         dto.setRole(user.getRoles().name());
 
-        if (user.getVacancies() != null) {
+        /*if (user.getVacancies() != null) {
             dto.setVacancies(new ArrayList<>(user.getVacancies()));
         }
 
         if (user.getInterviews() != null) {
             dto.setInterviews(new ArrayList<>(user.getInterviews()));
-        }
+        }*/
 
 
         return dto;

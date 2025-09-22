@@ -18,6 +18,6 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String role;
-    private List<Vacancy> vacancies;
-    private List<Interview> interviews;
+    /*private List<Vacancy> vacancies;
+    private List<Interview> interviews;*/
 }

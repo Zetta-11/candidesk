@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "vacancies")
@@ -40,6 +42,10 @@ public class Vacancy {
 
     @ManyToMany(mappedBy = "vacancies")
     private java.util.Set<Candidate> candidates;
+
+    @OneToMany(mappedBy = "relatedVacancy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
+
 
     @PrePersist
     protected void onCreate() {
