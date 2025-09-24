@@ -7,7 +7,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [isCreating, setIsCreating] = useState(false); // нове для створення
+  const [isCreating, setIsCreating] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -135,7 +135,7 @@ const Users = () => {
                     name="login"
                     value={editingUser.login || ''}
                     onChange={handleChange}
-                    disabled={!isCreating} // не змінюємо логін при редагуванні
+                    disabled={!isCreating}
                   />
                   {errors.login && <div className="invalid-feedback">{errors.login}</div>}
                 </div>

@@ -29,7 +29,7 @@ const Header = () => {
           <li className="nav-item"><NavLink className="nav-link" to="/about">About</NavLink></li>
           <li className="nav-item"><NavLink className="nav-link" to="/users">All Users</NavLink></li>
         </ul>
-        <div className="ms-auto">
+        <div className="ms-auto me-3">
           {isAuthenticated ? (
             <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
           ) : (
