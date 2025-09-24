@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -31,8 +33,19 @@ public class AuthController {
     }
 
     @GetMapping("/check")
-    public boolean checkAuth(Authentication authentication) {
-        return authentication != null && authentication.isAuthenticated();
+    public Object checkAuth(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null; // неавторизований користувач
+        }
+
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        return Map.of(
+                "username", user.getUsername(),
+                "role", user.getAuthorities().stream()
+                        .findFirst()
+                        .map(auth -> auth.getAuthority())
+                        .orElse("")
+        );
     }
 
     @Data

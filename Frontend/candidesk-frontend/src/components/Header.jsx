@@ -4,12 +4,19 @@ import { checkAuthService } from '../services/AuthService';
 
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkLogin = async () => {
-      const loggedIn = await checkAuthService();
-      setIsAuthenticated(loggedIn);
+      const user = await checkAuthService();
+      if (user) {
+        setIsAuthenticated(true);
+        setUserRole(user.role); 
+      } else {
+        setIsAuthenticated(false);
+        setUserRole(null);
+      }
     };
     checkLogin();
   }, []);
@@ -27,11 +34,15 @@ const Header = () => {
         <ul className="navbar-nav">
           <li className="nav-item"><NavLink className="nav-link" to="/home">Home</NavLink></li>
           <li className="nav-item"><NavLink className="nav-link" to="/about">About</NavLink></li>
-          <li className="nav-item"><NavLink className="nav-link" to="/users">All Users</NavLink></li>
         </ul>
         <div className="ms-auto me-3">
           {isAuthenticated ? (
-            <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
+            <>
+              {userRole === "ROLE_ADMIN" && (
+                <NavLink className="btn btn-warning me-2" to="/admin">Admin Panel</NavLink>
+              )}
+              <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
+            </>
           ) : (
             <NavLink className="btn btn-outline-light" to="/login">Login</NavLink>
           )}

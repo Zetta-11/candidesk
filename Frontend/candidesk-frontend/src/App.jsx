@@ -8,6 +8,8 @@ import About from './pages/About';
 import Users from './pages/Users';
 import LoginComponent from './components/LoginComponent';
 import RegistrationComponent from './components/RegistrationComponent';
+import AdminPanel from './pages/AminPanel';
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -19,8 +21,17 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginComponent />} />
-            <Route path="/users" element={<Users />} />
             <Route path="/register" element={<RegistrationComponent />} />
+            <Route path="/admin/users" element={
+              <AdminRoute>
+                <Users />
+              </AdminRoute>
+            } />
+            <Route path="/admin" element={
+              <AdminRoute>
+                <AdminPanel />
+              </AdminRoute>
+            } />
           </Routes>
         </div>
         <Footer />

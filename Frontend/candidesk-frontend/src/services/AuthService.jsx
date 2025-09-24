@@ -21,6 +21,7 @@ export const checkAuthService = async () => {
     const response = await axios.get(`${API_URL}/api/auth/check`, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    console.log(response.data)
     return response.data;
   } catch {
     return false;
