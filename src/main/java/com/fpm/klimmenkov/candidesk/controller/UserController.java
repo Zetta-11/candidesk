@@ -39,24 +39,28 @@ public class UserController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         UserDto user = UserMapper.toDto(userService.getUserById(id));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("login")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> getUserByLogin(@RequestParam String login) {
         UserDto user = UserMapper.toDto(userService.getUserByLogin(login));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
         UserDto updatedUser = UserMapper.toDto(userService.updateUser(id, userDto));
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("The user was deleted!");

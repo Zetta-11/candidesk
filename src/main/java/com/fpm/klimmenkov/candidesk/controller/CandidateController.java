@@ -1,6 +1,7 @@
 package com.fpm.klimmenkov.candidesk.controller;
 
-import com.fpm.klimmenkov.candidesk.Entity.Candidate;
+import com.fpm.klimmenkov.candidesk.dto.CandidateDto;
+import com.fpm.klimmenkov.candidesk.dto.mapper.CandidateMapper;
 import com.fpm.klimmenkov.candidesk.service.CandidateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
 @RequestMapping("/api/candidates")
 @AllArgsConstructor
 @RestController
@@ -19,33 +19,33 @@ public class CandidateController {
     private final CandidateService candidateService;
 
     @PostMapping
-    public ResponseEntity<Candidate> createCandidate(@Valid @RequestBody Candidate candidate) {
-        Candidate createdCandidate = candidateService.saveCandidate(candidate);
-        return new ResponseEntity<>(createdCandidate, HttpStatus.CREATED);
+    public ResponseEntity<CandidateDto> createCandidate(@Valid @RequestBody CandidateDto candidateDto) {
+        var candidate = candidateService.saveCandidate(CandidateMapper.toEntity(candidateDto));
+        return new ResponseEntity<>(CandidateMapper.toDTO(candidate), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Candidate>> getAllCandidates() {
-        List<Candidate> candidates = candidateService.getAllCandidates();
+    public ResponseEntity<List<CandidateDto>> getAllCandidates() {
+        List<CandidateDto> candidates = candidateService.getAllCandidates();
         return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
-        Candidate candidate = candidateService.getCandidateById(id);
-        return new ResponseEntity<>(candidate, HttpStatus.OK);
+    public ResponseEntity<CandidateDto> getCandidateById(@PathVariable Long id) {
+        var candidate = candidateService.getCandidateById(id);
+        return new ResponseEntity<>(CandidateMapper.toDTO(candidate), HttpStatus.OK);
     }
 
     @GetMapping("email")
-    public ResponseEntity<Candidate> getCandidateByEmail(@RequestParam String email) {
-        Candidate candidate = candidateService.getCandidateByEmail(email);
-        return new ResponseEntity<>(candidate, HttpStatus.OK);
+    public ResponseEntity<CandidateDto> getCandidateByEmail(@RequestParam String email) {
+        var candidate = candidateService.getCandidateByEmail(email);
+        return new ResponseEntity<>(CandidateMapper.toDTO(candidate), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Candidate> updateCandidate(@PathVariable Long id, @Valid @RequestBody Candidate candidate) {
-        Candidate candidateUpdated = candidateService.updateCandidate(id, candidate);
-        return new ResponseEntity<>(candidateUpdated, HttpStatus.OK);
+    public ResponseEntity<CandidateDto> updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateDto candidateDto) {
+        var candidate = candidateService.updateCandidate(id, CandidateMapper.toEntity(candidateDto));
+        return new ResponseEntity<>(CandidateMapper.toDTO(candidate), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")

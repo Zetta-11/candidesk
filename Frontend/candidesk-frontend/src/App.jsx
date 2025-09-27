@@ -6,10 +6,12 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import Users from './pages/Users';
+import Candidates from './pages/Candidates';
 import LoginComponent from './components/LoginComponent';
 import RegistrationComponent from './components/RegistrationComponent';
 import AdminPanel from './pages/AminPanel';
 import AdminRoute from './components/AdminRoute';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
@@ -22,16 +24,12 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginComponent />} />
             <Route path="/register" element={<RegistrationComponent />} />
-            <Route path="/admin/users" element={
-              <AdminRoute>
-                <Users />
-              </AdminRoute>
-            } />
-            <Route path="/admin" element={
-              <AdminRoute>
-                <AdminPanel />
-              </AdminRoute>
-            } />
+
+            <Route path="/admin" element={<AdminRoute><Outlet /></AdminRoute>}>
+              <Route index element={<AdminPanel />} /> 
+              <Route path="users" element={<Users />} />
+              <Route path="candidates" element={<Candidates />} />
+            </Route>
           </Routes>
         </div>
         <Footer />

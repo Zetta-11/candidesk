@@ -1,6 +1,7 @@
 package com.fpm.klimmenkov.candidesk.service;
 
 import com.fpm.klimmenkov.candidesk.Entity.Candidate;
+import com.fpm.klimmenkov.candidesk.dto.CandidateDto;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface CandidateService {
 
     Candidate updateCandidate(Long id, Candidate candidate);
 
-    List<Candidate> getAllCandidates();
+    List<CandidateDto> getAllCandidates();
 
     Candidate getCandidateByEmail(String email);
 

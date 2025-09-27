@@ -1,6 +1,8 @@
 package com.fpm.klimmenkov.candidesk.service.impl;
 
 import com.fpm.klimmenkov.candidesk.Entity.Candidate;
+import com.fpm.klimmenkov.candidesk.dto.CandidateDto;
+import com.fpm.klimmenkov.candidesk.dto.mapper.CandidateMapper;
 import com.fpm.klimmenkov.candidesk.exception.ResourceNotFoundException;
 import com.fpm.klimmenkov.candidesk.repository.CandidateRepository;
 import com.fpm.klimmenkov.candidesk.service.CandidateService;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,10 +22,9 @@ public class CandidateServiceImpl implements CandidateService {
     public Candidate saveCandidate(Candidate candidate) {
         candidateRepository.findByemail(candidate.getEmail())
                 .ifPresent(c -> {
-                    throw new IllegalArgumentException("Candidate with this login already exists");
+                    throw new IllegalArgumentException("Candidate with this email already exists");
                 });
-        candidateRepository.save(candidate);
-        return candidate;
+        return candidateRepository.save(candidate);
     }
 
     @Override
@@ -30,36 +32,32 @@ public class CandidateServiceImpl implements CandidateService {
         Candidate existingCandidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Candidate is not found with the given ID: " + id));
 
-
         existingCandidate.setFirstName(candidate.getFirstName());
         existingCandidate.setLastName(candidate.getLastName());
-        //existingCandidate.setEmail(candidate.getEmail());
         existingCandidate.setPhone(candidate.getPhone());
         existingCandidate.setCvLink(candidate.getCvLink());
         existingCandidate.setStatus(candidate.getStatus());
-        candidateRepository.save(existingCandidate);
 
-        return existingCandidate;
+        return candidateRepository.save(existingCandidate);
     }
 
     @Override
-    public List<Candidate> getAllCandidates() {
-        List<Candidate> candidates = candidateRepository.findAll();
-        return candidates;
+    public List<CandidateDto> getAllCandidates() {
+        return candidateRepository.findAll().stream()
+                .map(CandidateMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Candidate getCandidateByEmail(String email) {
-        Candidate candidate = candidateRepository.findByemail(email)
+        return candidateRepository.findByemail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Candidate is not found with the given email: " + email));
-        return candidate;
     }
 
     @Override
     public Candidate getCandidateById(Long id) {
-        Candidate candidate = candidateRepository.findById(id)
+        return candidateRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Candidate is not found with the given ID: " + id));
-        return candidate;
     }
 
     @Override

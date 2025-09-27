@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { listUsers, updateUserRequest, createUserRequest } from '../services/UserService';
+import { listUsers, updateUserRequest, createUserRequest, deleteUser } from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
-import { checkAuthService } from '../services/AuthService'; 
+import { checkAuthService } from '../services/AuthService';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +15,7 @@ const Users = () => {
 
   useEffect(() => {
     const verifyLogin = async () => {
-      const isLoggedIn = await checkAuthService(); 
+      const isLoggedIn = await checkAuthService();
       if (!isLoggedIn) {
         navigate("/login");
       } else {
@@ -85,6 +85,19 @@ const Users = () => {
       });
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUser(id)
+        .then(() => {
+          getAllUsers();
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Failed to delete user. Check console for details.');
+        });
+    }
+  };
+
   return (
     <div className="container">
       <h1 className='text-center'>List of users</h1>
@@ -109,11 +122,25 @@ const Users = () => {
               <td>{u.lastName}</td>
               <td>{u.role}</td>
               <td>
-                <button className='btn btn-info' onClick={() => openEditModal(u)}>Edit</button>
+                <div className="d-flex justify-content-between">
+                  <button
+                    className='btn btn-info'
+                    onClick={() => openEditModal(u)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className='btn btn-danger'
+                    onClick={() => handleDelete(u.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
+
       </table>
 
       {/* Modal */}
