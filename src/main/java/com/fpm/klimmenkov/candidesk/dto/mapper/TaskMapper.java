@@ -5,7 +5,6 @@ import com.fpm.klimmenkov.candidesk.dto.TaskDto;
 
 public class TaskMapper {
 
-
     public static TaskDto toDto(Task task) {
         TaskDto dto = new TaskDto();
         dto.setId((long) task.getId());
@@ -18,14 +17,19 @@ public class TaskMapper {
             dto.setAssignedToId((long) task.getAssignedTo().getId());
             dto.setAssignedToLogin(task.getAssignedTo().getLogin());
         }
+
         if (task.getRelatedCandidate() != null) {
             dto.setRelatedCandidateId((long) task.getRelatedCandidate().getId());
-            dto.setRelatedCandidateName(task.getRelatedCandidate().getFirstName() + " " + task.getRelatedCandidate().getLastName());
+            dto.setRelatedCandidateEmail(
+                    task.getRelatedCandidate().getEmail()
+            );
         }
+
         if (task.getRelatedVacancy() != null) {
             dto.setRelatedVacancyId((long) task.getRelatedVacancy().getId());
             dto.setRelatedVacancyTitle(task.getRelatedVacancy().getTitle());
         }
+
         return dto;
     }
 

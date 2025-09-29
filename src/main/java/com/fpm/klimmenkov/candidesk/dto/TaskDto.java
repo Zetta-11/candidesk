@@ -19,7 +19,7 @@ public class TaskDto {
     private Long assignedToId;
     private String assignedToLogin;
     private Long relatedCandidateId;
-    private String relatedCandidateName;
+    private String relatedCandidateEmail;
     private Long relatedVacancyId;
     private String relatedVacancyTitle;
     private LocalDateTime dueDate;

@@ -13,6 +13,7 @@ import AdminPanel from './pages/AminPanel';
 import AdminRoute from './components/AdminRoute';
 import { Outlet } from 'react-router-dom';
 import Vacancies from './pages/Vacancies';
+import Tasks from './pages/Tasks';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="users" element={<Users />} />
               <Route path="candidates" element={<Candidates />} />
               <Route path="vacancies" element={<Vacancies />} />
+              <Route path="tasks" element={<Tasks />} />
             </Route>
           </Routes>
         </div>

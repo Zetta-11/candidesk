@@ -30,18 +30,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         TaskMapper.toEntity(task, dto);
 
-        if (dto.getAssignedToId() != null) {
-            task.setAssignedTo(userRepository.findById(dto.getAssignedToId())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + dto.getAssignedToId())));
-        }
-        if (dto.getRelatedCandidateId() != null) {
-            task.setRelatedCandidate(candidateRepository.findById(dto.getRelatedCandidateId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Candidate not found with id: " + dto.getRelatedCandidateId())));
-        }
-        if (dto.getRelatedVacancyId() != null) {
-            task.setRelatedVacancy(vacancyRepository.findById(dto.getRelatedVacancyId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found with id: " + dto.getRelatedVacancyId())));
-        }
+        setRelations(task, dto);
 
         return TaskMapper.toDto(taskRepository.save(task));
     }
@@ -53,26 +42,14 @@ public class TaskServiceImpl implements TaskService {
 
         TaskMapper.toEntity(task, dto);
 
-        if (dto.getAssignedToId() != null) {
-            task.setAssignedTo(userRepository.findById(dto.getAssignedToId())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + dto.getAssignedToId())));
-        }
-        if (dto.getRelatedCandidateId() != null) {
-            task.setRelatedCandidate(candidateRepository.findById(dto.getRelatedCandidateId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Candidate not found with id: " + dto.getRelatedCandidateId())));
-        }
-        if (dto.getRelatedVacancyId() != null) {
-            task.setRelatedVacancy(vacancyRepository.findById(dto.getRelatedVacancyId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found with id: " + dto.getRelatedVacancyId())));
-        }
+        setRelations(task, dto);
 
         return TaskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
     public List<TaskDto> getAllTasks() {
-        return taskRepository.findAll()
-                .stream()
+        return taskRepository.findAll().stream()
                 .map(TaskMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -89,5 +66,28 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         taskRepository.delete(task);
+    }
+
+    private void setRelations(Task task, TaskDto dto) {
+        if (dto.getAssignedToId() != null) {
+            task.setAssignedTo(userRepository.findById(dto.getAssignedToId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + dto.getAssignedToId())));
+        } else {
+            task.setAssignedTo(null);
+        }
+
+        if (dto.getRelatedCandidateId() != null) {
+            task.setRelatedCandidate(candidateRepository.findById(dto.getRelatedCandidateId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Candidate not found with id: " + dto.getRelatedCandidateId())));
+        } else {
+            task.setRelatedCandidate(null);
+        }
+
+        if (dto.getRelatedVacancyId() != null) {
+            task.setRelatedVacancy(vacancyRepository.findById(dto.getRelatedVacancyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found with id: " + dto.getRelatedVacancyId())));
+        } else {
+            task.setRelatedVacancy(null);
+        }
     }
 }
