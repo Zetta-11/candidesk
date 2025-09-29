@@ -1,6 +1,5 @@
 package com.fpm.klimmenkov.candidesk.Entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fpm.klimmenkov.candidesk.Entity.status.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -51,7 +50,6 @@ public class User {
     private UserStatus roles;
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<Vacancy> vacancies;
 
     @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL, orphanRemoval = true)

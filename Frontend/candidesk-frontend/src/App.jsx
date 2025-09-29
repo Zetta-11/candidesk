@@ -12,6 +12,7 @@ import RegistrationComponent from './components/RegistrationComponent';
 import AdminPanel from './pages/AminPanel';
 import AdminRoute from './components/AdminRoute';
 import { Outlet } from 'react-router-dom';
+import Vacancies from './pages/Vacancies';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route index element={<AdminPanel />} /> 
               <Route path="users" element={<Users />} />
               <Route path="candidates" element={<Candidates />} />
+              <Route path="vacancies" element={<Vacancies />} />
             </Route>
           </Routes>
         </div>

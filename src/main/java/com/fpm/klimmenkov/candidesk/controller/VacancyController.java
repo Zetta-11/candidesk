@@ -1,6 +1,6 @@
 package com.fpm.klimmenkov.candidesk.controller;
 
-import com.fpm.klimmenkov.candidesk.Entity.Vacancy;
+import com.fpm.klimmenkov.candidesk.dto.VacancyDto;
 import com.fpm.klimmenkov.candidesk.service.VacancyService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
 @RequestMapping("/api/vacancies")
 @AllArgsConstructor
 @RestController
@@ -19,26 +18,26 @@ public class VacancyController {
     private final VacancyService vacancyService;
 
     @PostMapping
-    public ResponseEntity<Vacancy> createVacancy(@Valid @RequestBody Vacancy vacancy) {
-        Vacancy vacancyToSave = vacancyService.saveVacancy(vacancy);
-        return new ResponseEntity<>(vacancyToSave, HttpStatus.CREATED);
+    public ResponseEntity<VacancyDto> createVacancy(@Valid @RequestBody VacancyDto vacancy) {
+        VacancyDto saved = vacancyService.saveVacancy(vacancy);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Vacancy>> getAllVacancies() {
-        List<Vacancy> vacancies = vacancyService.getAllVacancies();
+    public ResponseEntity<List<VacancyDto>> getAllVacancies() {
+        List<VacancyDto> vacancies = vacancyService.getAllVacancies();
         return new ResponseEntity<>(vacancies, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Vacancy> getVacancyById(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.getVacancyById(id);
+    public ResponseEntity<VacancyDto> getVacancyById(@PathVariable Long id) {
+        VacancyDto vacancy = vacancyService.getVacancyById(id);
         return new ResponseEntity<>(vacancy, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Vacancy> updateVacancy(@PathVariable Long id, @Valid @RequestBody Vacancy vacancy) {
-        Vacancy updatedVacancy = vacancyService.updateVacancy(id, vacancy);
+    public ResponseEntity<VacancyDto> updateVacancy(@PathVariable Long id, @Valid @RequestBody VacancyDto vacancy) {
+        VacancyDto updatedVacancy = vacancyService.updateVacancy(id, vacancy);
         return new ResponseEntity<>(updatedVacancy, HttpStatus.OK);
     }
 
@@ -48,3 +47,4 @@ public class VacancyController {
         return ResponseEntity.ok("Vacancy deleted successfully!");
     }
 }
+

@@ -1,18 +1,18 @@
 package com.fpm.klimmenkov.candidesk.service;
 
-import com.fpm.klimmenkov.candidesk.Entity.Vacancy;
+import com.fpm.klimmenkov.candidesk.dto.VacancyDto;
 
 import java.util.List;
 
 public interface VacancyService {
 
-    Vacancy saveVacancy(Vacancy vacancy);
+    VacancyDto saveVacancy(VacancyDto vacancy);
 
-    Vacancy updateVacancy(Long id, Vacancy vacancy);
+    VacancyDto updateVacancy(Long id, VacancyDto vacancy);
 
-    List<Vacancy> getAllVacancies();
+    List<VacancyDto> getAllVacancies();
 
-    Vacancy getVacancyById(Long id);
+    VacancyDto getVacancyById(Long id);
 
     void deleteVacancy(Long id);
 }

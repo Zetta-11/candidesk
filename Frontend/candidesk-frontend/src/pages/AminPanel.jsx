@@ -4,10 +4,12 @@ import { NavLink } from 'react-router-dom';
 const AdminPanel = () => {
   const cards = [
     { title: 'Users', description: 'Users control', path: '/admin/users' },
+    { title: 'Vacancies', description: 'Vacancies manipulation', path: '/admin/vacancies' },
+    { title: 'Candidates', description: 'Candidates view', path: '/admin/candidates' },
     { title: 'Tasks', description: 'Tasks control', path: '/admin/tasks' },
     { title: 'Settings', description: 'Settings manipulating', path: '/admin/settings' },
     { title: 'Stats', description: 'Stats view', path: '/admin/stats' },
-    { title: 'Candidates', description: 'Candidates view', path: '/admin/candidates' },
+    
   ];
 
   return (

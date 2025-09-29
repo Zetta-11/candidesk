@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,13 +51,8 @@ public class Candidate {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "candidate_vacancy",
-            joinColumns = @JoinColumn(name = "candidate_id"),
-            inverseJoinColumns = @JoinColumn(name = "vacancy_id")
-    )
-    private Set<Vacancy> vacancies;
+    @ManyToMany(mappedBy = "candidates", fetch = FetchType.LAZY)
+    private Set<Vacancy> vacancies = new HashSet<>();
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Interview> interviews = new java.util.ArrayList<>();
@@ -64,5 +60,18 @@ public class Candidate {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Candidate other = (Candidate) obj;
+        return id == other.id;
     }
 }

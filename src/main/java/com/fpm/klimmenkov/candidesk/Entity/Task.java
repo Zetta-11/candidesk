@@ -1,6 +1,7 @@
 package com.fpm.klimmenkov.candidesk.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fpm.klimmenkov.candidesk.Entity.status.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,11 +37,12 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_candidate")
+    @JsonIgnore
     private Candidate relatedCandidate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_vacancy")
-    @JsonBackReference
+    @JsonBackReference(value = "vacancy-tasks")
     private Vacancy relatedVacancy;
 
     @Column(name = "due_date")
