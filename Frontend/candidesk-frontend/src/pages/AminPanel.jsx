@@ -8,7 +8,7 @@ const AdminPanel = () => {
     { title: 'Candidates', description: 'Candidates view', path: '/admin/candidates' },
     { title: 'Tasks', description: 'Tasks control', path: '/admin/tasks' },
     { title: 'Settings', description: 'Settings manipulating', path: '/admin/settings' },
-    { title: 'Stats', description: 'Stats view', path: '/admin/stats' },
+    { title: 'Logs', description: 'Logs view', path: '/admin/logs' },
     
   ];
 

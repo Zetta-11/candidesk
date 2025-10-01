@@ -79,6 +79,7 @@ const Vacancies = () => {
                 requirements: vacancy.requirements,
                 createdById: vacancy.createdById || "",
                 candidateIds: vacancy.candidates?.map((c) => c.id) || [],
+                taskIds: vacancy.tasks?.map((t) => t.id) || [],
             });
         } else {
             setFormData({
@@ -87,6 +88,7 @@ const Vacancies = () => {
                 requirements: "",
                 createdById: "",
                 candidateIds: [],
+                taskIds: [],
             });
         }
         setShowModal(true);
@@ -109,18 +111,17 @@ const Vacancies = () => {
 
     const handleSave = async () => {
         try {
-
             const payload = {
                 title: formData.title,
                 description: formData.description,
                 requirements: formData.requirements,
                 createdById: formData.createdById ? Number(formData.createdById) : null,
                 candidateIds: formData.candidateIds,
-                taskIds: formData.taskIds,
+                taskIds: formData.taskIds || [],
             };
-            console.log(payload);
 
             if (editingVacancy) {
+                payload.taskIds = formData.taskIds;
                 await updateVacancy(editingVacancy.id, payload);
             } else {
                 await createVacancy(payload);
@@ -132,6 +133,7 @@ const Vacancies = () => {
             console.error("Error saving vacancy", err);
         }
     };
+
 
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this vacancy?")) {
@@ -271,6 +273,22 @@ const Vacancies = () => {
                                 ))}
                             </Form.Select>
                         </Form.Group>
+                        {editingVacancy && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Tasks</Form.Label>
+                                <Form.Select
+                                    multiple
+                                    value={formData.taskIds}
+                                    onChange={(e) => handleMultiSelectChange(e, "taskIds")}
+                                >
+                                    {tasks.map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.title}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                        )}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

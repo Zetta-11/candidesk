@@ -1,5 +1,9 @@
 package com.fpm.klimmenkov.candidesk.controller;
 
+import com.fpm.klimmenkov.candidesk.Entity.Log;
+import com.fpm.klimmenkov.candidesk.Entity.status.ActionType;
+import com.fpm.klimmenkov.candidesk.service.LogService;
+import com.fpm.klimmenkov.candidesk.service.UserService;
 import com.fpm.klimmenkov.candidesk.service.impl.JwtService;
 import lombok.Data;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,10 +20,14 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final LogService logService;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, LogService logService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.logService = logService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -29,13 +37,19 @@ public class AuthController {
         );
 
         UserDetails user = (UserDetails) authentication.getPrincipal();
+
+        logService.saveLog(Log.builder()
+                .user(userService.getUserByLogin(user.getUsername()))
+                .actionType(ActionType.LOGIN)
+                .build());
+
         return jwtService.generateToken(user);
     }
 
     @GetMapping("/check")
     public Object checkAuth(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return null; // неавторизований користувач
+            return null;
         }
 
         UserDetails user = (UserDetails) authentication.getPrincipal();

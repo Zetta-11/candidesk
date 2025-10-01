@@ -14,6 +14,7 @@ import AdminRoute from './components/AdminRoute';
 import { Outlet } from 'react-router-dom';
 import Vacancies from './pages/Vacancies';
 import Tasks from './pages/Tasks';
+import Logs from './pages/Logs';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="candidates" element={<Candidates />} />
               <Route path="vacancies" element={<Vacancies />} />
               <Route path="tasks" element={<Tasks />} />
+              <Route path="logs" element={<Logs />} />
             </Route>
           </Routes>
         </div>
