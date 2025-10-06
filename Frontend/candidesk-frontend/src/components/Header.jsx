@@ -44,6 +44,12 @@ const Header = () => {
         <div className="ms-auto me-3 d-flex align-items-center">
           {isAuthenticated ? (
             <>
+            {(userRole === "ROLE_TL" || userRole === "ROLE_ADMIN") && (
+                <NavLink className="btn btn- me-2 text-white" to="/tl">
+                  TL Page
+                </NavLink>
+              )}
+
               {(userRole === "ROLE_HR" || userRole === "ROLE_ADMIN") && (
                 <NavLink className="btn btn-info me-2 text-white" to="/hr">
                   HR Page

@@ -17,6 +17,8 @@ import Tasks from './pages/Tasks';
 import Logs from './pages/Logs';
 import HrRoute from './components/HrRoute';
 import HrPage from './pages/HrPage';
+import TLRoute from './components/TLRoute';
+import TLPage from './pages/TLPage';
 
 function App() {
   return (
@@ -41,6 +43,10 @@ function App() {
 
             <Route path='/hr' element={<HrRoute><Outlet /></HrRoute>}>
               <Route index element={<HrPage />} />
+            </Route>
+
+            <Route path='/tl' element={<TLRoute><Outlet /></TLRoute>}>
+              <Route index element={<TLPage />} />
             </Route>
           </Routes>
         </div>
