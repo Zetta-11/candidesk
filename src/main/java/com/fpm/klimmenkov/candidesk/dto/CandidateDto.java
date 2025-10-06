@@ -19,6 +19,7 @@ public class CandidateDto {
     private String email;
     private String phone;
     private String cvLink;
+    private String position;
     private CandidateStatus status;
     private LocalDateTime createdAt;
 }

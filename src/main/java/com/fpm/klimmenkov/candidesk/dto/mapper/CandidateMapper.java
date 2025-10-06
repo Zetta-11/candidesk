@@ -15,6 +15,7 @@ public class CandidateMapper {
                 .cvLink(candidate.getCvLink())
                 .status(candidate.getStatus())
                 .createdAt(candidate.getCreatedAt())
+                .position(candidate.getPosition())
                 .build();
     }
 
@@ -29,6 +30,7 @@ public class CandidateMapper {
                 .cvLink(dto.getCvLink())
                 .status(dto.getStatus())
                 .createdAt(dto.getCreatedAt())
+                .position(dto.getPosition())
                 .build();
     }
 

@@ -48,6 +48,9 @@ public class Candidate {
     @Column(name = "status", nullable = false, length = 20)
     private CandidateStatus status;
 
+    @Column(name = "position", nullable = false, length = 60)
+    private String position;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

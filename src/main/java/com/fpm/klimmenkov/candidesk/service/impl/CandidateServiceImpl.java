@@ -37,6 +37,7 @@ public class CandidateServiceImpl implements CandidateService {
         existingCandidate.setPhone(candidate.getPhone());
         existingCandidate.setCvLink(candidate.getCvLink());
         existingCandidate.setStatus(candidate.getStatus());
+        existingCandidate.setPosition(candidate.getPosition());
 
         return candidateRepository.save(existingCandidate);
     }

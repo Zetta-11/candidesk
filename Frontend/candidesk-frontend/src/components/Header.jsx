@@ -12,7 +12,7 @@ const Header = () => {
       const user = await checkAuthService();
       if (user) {
         setIsAuthenticated(true);
-        setUserRole(user.role); 
+        setUserRole(user.role);
       } else {
         setIsAuthenticated(false);
         setUserRole(null);
@@ -30,21 +30,40 @@ const Header = () => {
   return (
     <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
       <NavLink className="navbar-brand ms-3" to="/home">CANDIDESK</NavLink>
+
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
-          <li className="nav-item"><NavLink className="nav-link" to="/home">Home</NavLink></li>
-          <li className="nav-item"><NavLink className="nav-link" to="/about">About</NavLink></li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/home">Home</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/about">About</NavLink>
+          </li>
         </ul>
-        <div className="ms-auto me-3">
+
+        <div className="ms-auto me-3 d-flex align-items-center">
           {isAuthenticated ? (
             <>
-              {userRole === "ROLE_ADMIN" && (
-                <NavLink className="btn btn-warning me-2" to="/admin">Admin Panel</NavLink>
+              {(userRole === "ROLE_HR" || userRole === "ROLE_ADMIN") && (
+                <NavLink className="btn btn-info me-2 text-white" to="/hr">
+                  HR Page
+                </NavLink>
               )}
-              <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
+
+              {userRole === "ROLE_ADMIN" && (
+                <NavLink className="btn btn-warning me-2" to="/admin">
+                  Admin Panel
+                </NavLink>
+              )}
+
+              <button className="btn btn-outline-light" onClick={handleLogout}>
+                Logout
+              </button>
             </>
           ) : (
-            <NavLink className="btn btn-outline-light" to="/login">Login</NavLink>
+            <NavLink className="btn btn-outline-light" to="/login">
+              Login
+            </NavLink>
           )}
         </div>
       </div>

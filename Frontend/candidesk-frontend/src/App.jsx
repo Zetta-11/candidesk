@@ -15,6 +15,8 @@ import { Outlet } from 'react-router-dom';
 import Vacancies from './pages/Vacancies';
 import Tasks from './pages/Tasks';
 import Logs from './pages/Logs';
+import HrRoute from './components/HrRoute';
+import HrPage from './pages/HrPage';
 
 function App() {
   return (
@@ -35,6 +37,10 @@ function App() {
               <Route path="vacancies" element={<Vacancies />} />
               <Route path="tasks" element={<Tasks />} />
               <Route path="logs" element={<Logs />} />
+            </Route>
+
+            <Route path='/hr' element={<HrRoute><Outlet /></HrRoute>}>
+              <Route index element={<HrPage />} />
             </Route>
           </Routes>
         </div>
