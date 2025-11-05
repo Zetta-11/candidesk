@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner, Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { getCandidates, updateCandidate } from "../services/CandidateService";
 import { getVacancies } from "../services/VacancyService";
+import { searchWorkUaCandidates } from "../services/ExternalCandidateService";
 
 const HrPage = () => {
   const [candidates, setCandidates] = useState([]);
@@ -17,6 +18,11 @@ const HrPage = () => {
   const [candidatePositionFilter, setCandidatePositionFilter] = useState("");
   const [vacancyTitleFilter, setVacancyTitleFilter] = useState("");
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchSkills, setSearchSkills] = useState("");
+  const [externalLoading, setExternalLoading] = useState(false);
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -25,25 +31,14 @@ const HrPage = () => {
           getVacancies(),
         ]);
 
-        const candidatesData = candidatesRes.data || candidatesRes;
-        const vacanciesData = vacanciesRes.data || vacanciesRes;
-
-        const externalMock = [
-          { id: 101, name: "Olena Koval", source: "LinkedIn", position: "Java Developer" },
-          { id: 102, name: "Andrii Petrov", source: "Work.ua", position: "QA Engineer" },
-          { id: 103, name: "Iryna Horbunova", source: "Djinni", position: "Project Manager" },
-        ];
-
-        setCandidates(candidatesData);
-        setVacancies(vacanciesData);
-        setExternalCandidates(externalMock);
+        setCandidates(candidatesRes.data || candidatesRes);
+        setVacancies(vacanciesRes.data || vacanciesRes);
       } catch (error) {
         console.error("Error loading HR data:", error);
       } finally {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
 
@@ -60,25 +55,38 @@ const HrPage = () => {
 
   const handleSaveStatus = async () => {
     if (!selectedItem || modalType !== "candidate") return;
-    if (!updatedStatus) {
-      alert("Please select a valid status!");
-      return;
-    }
-
     try {
       const updated = { ...selectedItem, status: updatedStatus };
       await updateCandidate(selectedItem.id, updated);
-
       setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === selectedItem.id ? { ...c, status: updatedStatus } : c
-        )
+        prev.map((c) => (c.id === selectedItem.id ? updated : c))
       );
-
       handleCloseModal();
     } catch (err) {
       console.error("Error updating status:", err);
       alert("Failed to update candidate status");
+    }
+  };
+
+
+  const handleSearchExternal = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim() && !searchSkills.trim()) {
+      alert("Введіть назву вакансії або навички для пошуку.");
+      return;
+    }
+    setExternalLoading(true);
+    try {
+      const results = await searchWorkUaCandidates({
+        query: searchQuery,
+        page: 1,
+      });
+      setExternalCandidates(results.map((r, i) => ({ id: i + 1, ...r, source: "Work.ua" })));
+    } catch (err) {
+      console.error("External search error:", err);
+      alert("Помилка під час пошуку кандидатів на Work.ua");
+    } finally {
+      setExternalLoading(false);
     }
   };
 
@@ -88,20 +96,6 @@ const HrPage = () => {
         <Spinner animation="border" variant="primary" />
       </div>
     );
-
-  const filteredCandidates = candidates.filter((c) => {
-    const matchesStatus = candidateStatusFilter ? c.status === candidateStatusFilter : true;
-    const matchesPosition = candidatePositionFilter
-      ? c.position?.toLowerCase().includes(candidatePositionFilter.toLowerCase())
-      : true;
-    return matchesStatus && matchesPosition;
-  });
-
-  const filteredVacancies = vacancies.filter((v) =>
-    vacancyTitleFilter
-      ? v.title?.toLowerCase().includes(vacancyTitleFilter.toLowerCase())
-      : true
-  );
 
   return (
     <div className="container-fluid mt-4">
@@ -150,18 +144,16 @@ const HrPage = () => {
             </Col>
 
             <Col md={4} className="d-flex align-items-center justify-content-center">
-              <div className="text-muted text-center">
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => {
-                    setCandidateStatusFilter("");
-                    setCandidatePositionFilter("");
-                    setVacancyTitleFilter("");
-                  }}
-                >
-                  Reset Filters
-                </Button>
-              </div>
+              <Button
+                variant="outline-secondary"
+                onClick={() => {
+                  setCandidateStatusFilter("");
+                  setCandidatePositionFilter("");
+                  setVacancyTitleFilter("");
+                }}
+              >
+                Reset Filters
+              </Button>
             </Col>
           </Row>
         </Card.Body>
@@ -178,19 +170,15 @@ const HrPage = () => {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Full Name</th>
+                    <th>Name</th>
                     <th>Position</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCandidates.length > 0 ? (
-                    filteredCandidates.map((c) => (
-                      <tr
-                        key={c.id}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRowClick(c, "candidate")}
-                      >
+                  {candidates.length ? (
+                    candidates.map((c) => (
+                      <tr key={c.id} onClick={() => handleRowClick(c, "candidate")} style={{ cursor: "pointer" }}>
                         <td>{c.id}</td>
                         <td>{c.firstName} {c.lastName}</td>
                         <td>{c.position}</td>
@@ -198,11 +186,7 @@ const HrPage = () => {
                       </tr>
                     ))
                   ) : (
-                    <tr>
-                      <td colSpan={4} className="text-center text-muted">
-                        No results
-                      </td>
-                    </tr>
+                    <tr><td colSpan={4} className="text-center text-muted">No results</td></tr>
                   )}
                 </tbody>
               </Table>
@@ -225,24 +209,16 @@ const HrPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredVacancies.length > 0 ? (
-                    filteredVacancies.map((v) => (
-                      <tr
-                        key={v.id}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRowClick(v, "vacancy")}
-                      >
+                  {vacancies.length ? (
+                    vacancies.map((v) => (
+                      <tr key={v.id} onClick={() => handleRowClick(v, "vacancy")} style={{ cursor: "pointer" }}>
                         <td>{v.id}</td>
                         <td>{v.title}</td>
                         <td>{v.requirements ? v.requirements.slice(0, 30) + "..." : "—"}</td>
                       </tr>
                     ))
                   ) : (
-                    <tr>
-                      <td colSpan={3} className="text-center text-muted">
-                        No results
-                      </td>
-                    </tr>
+                    <tr><td colSpan={3} className="text-center text-muted">No results</td></tr>
                   )}
                 </tbody>
               </Table>
@@ -253,31 +229,67 @@ const HrPage = () => {
         <div className="col-md-4 mb-3">
           <Card className="shadow-sm h-100">
             <Card.Header className="bg-info text-white fw-bold text-center">
-              Outer candidates (API)
+              Outer candidates (Work.ua)
             </Card.Header>
             <Card.Body>
+              <Form onSubmit={handleSearchExternal} className="mb-3">
+                <Row className="g-2">
+                  <Col md={12}>
+                    <Form.Control
+                      type="text"
+                      placeholder="Desired position (e.g. Java Developer)"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </Col>
+                  <Col md={12}>
+                    <Form.Control
+                      type="text"
+                      placeholder="Skills (comma separated)"
+                      value={searchSkills}
+                      onChange={(e) => setSearchSkills(e.target.value)}
+                    />
+                  </Col>
+                  <Col md={12}>
+                    <Form.Control
+                      type="text"
+                      placeholder="City or region (optional)"
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                    />
+                  </Col>
+                  <Col md={12} className="d-grid">
+                    <Button type="submit" variant="info" disabled={externalLoading}>
+                      {externalLoading ? "Searching..." : "Search"}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+
+              {externalLoading && <div className="text-center"><Spinner animation="border" size="sm" /></div>}
+
               <Table striped hover responsive>
                 <thead>
                   <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Position</th>
+                    <th>Information</th>
                     <th>Source</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {externalCandidates.map((ex) => (
-                    <tr
-                      key={ex.id}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleRowClick(ex, "external")}
-                    >
-                      <td>{ex.id}</td>
-                      <td>{ex.name}</td>
-                      <td>{ex.position}</td>
-                      <td>{ex.source}</td>
-                    </tr>
-                  ))}
+                  {externalCandidates.length ? (
+                    externalCandidates.map((ex) => (
+                      <tr key={ex.id} onClick={() => handleRowClick(ex, "external")} style={{ cursor: "pointer" }}>
+                        <td>{ex.id}</td>
+                        <td>{`${ex.firstName || ""} ${ex.lastName || ""}`}</td>
+                        <td>{ex.position}</td>
+                        <td>{ex.source}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr><td colSpan={4} className="text-center text-muted">No external results</td></tr>
+                  )}
                 </tbody>
               </Table>
             </Card.Body>
@@ -295,67 +307,35 @@ const HrPage = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedItem && modalType === "candidate" && (
+          {modalType === "candidate" && selectedItem && (
             <>
               <p><strong>ID:</strong> {selectedItem.id}</p>
               <p><strong>Full Name:</strong> {selectedItem.firstName} {selectedItem.lastName}</p>
-              <p><strong>Position:</strong> {selectedItem.position}</p>
               <p><strong>Email:</strong> {selectedItem.email}</p>
               <p><strong>Phone:</strong> {selectedItem.phone}</p>
-
+              <p><strong>Position:</strong> {selectedItem.position}</p>
               <Form.Group className="mb-3 mt-3">
-                <Form.Label><strong>Status:</strong></Form.Label>
-                <Form.Select
-                  value={updatedStatus}
-                  onChange={(e) => setUpdatedStatus(e.target.value)}
-                >
+                <Form.Label>Status</Form.Label>
+                <Form.Select value={updatedStatus} onChange={(e) => setUpdatedStatus(e.target.value)}>
                   <option value="NEW">NEW</option>
                   <option value="INTERVIEW">INTERVIEW</option>
                   <option value="HIRED">HIRED</option>
                   <option value="REJECTED">REJECTED</option>
                 </Form.Select>
               </Form.Group>
-
-              <p>
-                <strong>CV Link:</strong>{" "}
-                <a href={selectedItem.cvLink} target="_blank" rel="noreferrer">
-                  Open CV
-                </a>
-              </p>
-              <p><strong>Created At:</strong> {new Date(selectedItem.createdAt).toLocaleString()}</p>
+              <p><strong>CV Link:</strong> <a href={selectedItem.cvLink}>Open CV</a></p>
             </>
           )}
 
-          {selectedItem && modalType === "vacancy" && (
+          {modalType === "external" && selectedItem && (
             <>
-              <p><strong>ID:</strong> {selectedItem.id}</p>
-              <p><strong>Title:</strong> {selectedItem.title}</p>
-              <p><strong>Description:</strong> {selectedItem.description}</p>
-              <p><strong>Requirements:</strong> {selectedItem.requirements}</p>
-              <p><strong>Created By:</strong> {selectedItem.createdByLogin || selectedItem.createdById}</p>
-            </>
-          )}
-
-          {selectedItem && modalType === "external" && (
-            <>
-              <p><strong>ID:</strong> {selectedItem.id}</p>
-              <p><strong>Name:</strong> {selectedItem.name}</p>
-              <p><strong>Position:</strong> {selectedItem.position}</p>
+              <p><strong>Name:</strong> {`${selectedItem.firstName} ${selectedItem.lastName}`}</p>
+              <p><strong>Information:</strong> {selectedItem.position}</p>
               <p><strong>Source:</strong> {selectedItem.source}</p>
+              <p><strong>CV Link:</strong> <a href={selectedItem.cvLink}>Work.ua Profile</a></p>
             </>
           )}
         </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          {modalType === "candidate" && (
-            <Button variant="success" onClick={handleSaveStatus}>
-              Save changes
-            </Button>
-          )}
-        </Modal.Footer>
       </Modal>
     </div>
   );
