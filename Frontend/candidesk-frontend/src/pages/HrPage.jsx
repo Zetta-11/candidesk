@@ -160,6 +160,7 @@ const HrPage = () => {
       </Card>
 
       <div className="row">
+        {/* ==== LOCAL CANDIDATES ==== */}
         <div className="col-md-4 mb-3">
           <Card className="shadow-sm h-100">
             <Card.Header className="bg-primary text-white fw-bold text-center">
@@ -194,6 +195,7 @@ const HrPage = () => {
           </Card>
         </div>
 
+        {/* ==== VACANCIES ==== */}
         <div className="col-md-4 mb-3">
           <Card className="shadow-sm h-100">
             <Card.Header className="bg-success text-white fw-bold text-center">
@@ -226,6 +228,7 @@ const HrPage = () => {
           </Card>
         </div>
 
+        {/* ==== EXTERNAL CANDIDATES (Work.ua) ==== */}
         <div className="col-md-4 mb-3">
           <Card className="shadow-sm h-100">
             <Card.Header className="bg-info text-white fw-bold text-center">
@@ -330,7 +333,7 @@ const HrPage = () => {
           {modalType === "external" && selectedItem && (
             <>
               <p><strong>Name:</strong> {`${selectedItem.firstName} ${selectedItem.lastName}`}</p>
-              <p><strong>Information:</strong> {selectedItem.position}</p>
+              <p><strong>Position:</strong> {selectedItem.position}</p>
               <p><strong>Source:</strong> {selectedItem.source}</p>
               <p><strong>CV Link:</strong> <a href={selectedItem.cvLink}>Work.ua Profile</a></p>
             </>

@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
@@ -19,10 +20,15 @@ import java.util.regex.Pattern;
 
 @Service
 public class CandidateScrapper {
-    private static final String BASE_URL = "https://www.work.ua/ru/resumes-it-%s/";
-    private static final int TIMEOUT_MS = 10000;
+    @Value("${scrapper.link}")
+    private String BASE_URL;
+    @Value("${timeout.scrapper.link}")
+    private int TIMEOUT_MS;
     private static final AtomicInteger ID_GEN = new AtomicInteger(1000);
-    private static final Pattern NAME_PATTERN = Pattern.compile("([A-ZА-ЯЇІЄ][A-ZА-ЯЇІЄa-zа-яїіє]+)\\s+([A-ZА-ЯЇІЄ][A-ZА-ЯЇІЄa-zа-яїіє]+)");
+    private static final Pattern NAME_PATTERN = Pattern.compile(
+            "(?!Не\\s+вказано)([A-ZА-ЯЇІЄ][A-Za-zА-Яа-яЇїІіЄє]+)\\s+([A-ZА-ЯЇІЄ][A-Za-zА-Яа-яЇїІіЄє]+)"
+    );
+
 
     public List<CandidateDto> searchCandidates(String query, int page) throws Exception {
         String safeQuery = URLEncoder.encode(query.trim().toLowerCase().replaceAll("\\s+", "-"), StandardCharsets.UTF_8);
@@ -78,7 +84,9 @@ public class CandidateScrapper {
                         .replaceAll("\\s+", " ")
                         .trim();
 
-                if (position.isBlank()) position = "Не вказано";
+                if (position.isBlank() || position.equalsIgnoreCase("Не вказано")) {
+                    continue;
+                }
 
                 CandidateDto dto = CandidateDto.builder()
                         .id(ID_GEN.getAndIncrement())

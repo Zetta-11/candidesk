@@ -3,8 +3,6 @@ package com.fpm.klimmenkov.candidesk.controller;
 import com.fpm.klimmenkov.candidesk.dto.CandidateDto;
 import com.fpm.klimmenkov.candidesk.service.impl.CandidateScrapper;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,12 +31,14 @@ public class ExternalCandidateController {
         }
     }
 
-    @Setter
-    @Getter
     public static class SearchRequest {
         private String query;
         private int page;
 
+        public String getQuery() { return query; }
+        public void setQuery(String query) { this.query = query; }
+        public int getPage() { return page; }
+        public void setPage(int page) { this.page = page; }
     }
 
 }
