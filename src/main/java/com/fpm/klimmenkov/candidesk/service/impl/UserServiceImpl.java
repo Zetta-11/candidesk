@@ -49,6 +49,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changePassword(String login, String oldPassword, String newPassword) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with login: " + login));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
     public List<UserDto> getAllUsers() {
         List<UserDto> users = userRepository.findAll().stream().map(UserMapper::toDto).toList();
         return users;

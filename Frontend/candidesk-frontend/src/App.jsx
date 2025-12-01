@@ -19,6 +19,8 @@ import HrRoute from './components/HrRoute';
 import HrPage from './pages/HrPage';
 import TLRoute from './components/TLRoute';
 import TLPage from './pages/TLPage';
+import ProfilePage from './pages/Profile';
+import ChangePasswordPage from './pages/ChangePassword';
 
 function App() {
   return (
@@ -31,6 +33,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginComponent />} />
             <Route path="/register" element={<RegistrationComponent />} />
+            <Route path='/profile' element={<ProfilePage/>} />
+            <Route path="/change-password" element={<ChangePasswordPage />} />
+
 
             <Route path="/admin" element={<AdminRoute><Outlet /></AdminRoute>}>
               <Route index element={<AdminPanel />} /> 
