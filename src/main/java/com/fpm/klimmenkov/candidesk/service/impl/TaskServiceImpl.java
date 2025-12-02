@@ -1,6 +1,7 @@
 package com.fpm.klimmenkov.candidesk.service.impl;
 
 import com.fpm.klimmenkov.candidesk.Entity.Task;
+import com.fpm.klimmenkov.candidesk.Entity.status.TaskStatus;
 import com.fpm.klimmenkov.candidesk.dto.TaskDto;
 import com.fpm.klimmenkov.candidesk.dto.mapper.TaskMapper;
 import com.fpm.klimmenkov.candidesk.exception.ResourceNotFoundException;
@@ -44,6 +45,15 @@ public class TaskServiceImpl implements TaskService {
 
         setRelations(task, dto);
 
+        return TaskMapper.toDto(taskRepository.save(task));
+    }
+
+    @Override
+    public TaskDto updateTaskStatus(Long id, TaskStatus status) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+
+        task.setStatus(status);
         return TaskMapper.toDto(taskRepository.save(task));
     }
 

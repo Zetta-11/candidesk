@@ -43,7 +43,12 @@ const Header = () => {
             <li className='nav-item'>
               <NavLink className="nav-link" to="/profile">Profile</NavLink>
             </li>
-    )}
+          )}
+          {isAuthenticated && (
+            <li className='nav-item'>
+              <NavLink className="nav-link" to="/tasks">Tasks</NavLink>
+            </li>
+          )}
         </ul>
 
         <div className="ms-auto me-3 d-flex align-items-center">

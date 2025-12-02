@@ -21,6 +21,7 @@ import TLRoute from './components/TLRoute';
 import TLPage from './pages/TLPage';
 import ProfilePage from './pages/Profile';
 import ChangePasswordPage from './pages/ChangePassword';
+import TasksBoard from './pages/TasksBoard';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/register" element={<RegistrationComponent />} />
             <Route path='/profile' element={<ProfilePage/>} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
+            <Route path='/tasks' element={<TasksBoard/>} />
 
 
             <Route path="/admin" element={<AdminRoute><Outlet /></AdminRoute>}>
