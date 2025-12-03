@@ -41,4 +41,12 @@ public class ProfileController {
 
         return ResponseEntity.ok("Password updated successfully");
     }
+
+    @PostMapping("/delete-request")
+    public ResponseEntity<String> deleteAccount(Authentication authentication) {
+
+        userService.sendDeleteAccountRequest(authentication.getName());
+
+        return ResponseEntity.ok("Account deletion request was sent successfully");
+    }
 }

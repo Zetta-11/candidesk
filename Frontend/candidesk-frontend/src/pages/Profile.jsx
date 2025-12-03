@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProfile } from "../services/ProfileService";
+import { getProfile, requestAccountDeletion } from "../services/ProfileService";
 import { Card, Spinner, Alert, Button, Row, Col, Badge } from "react-bootstrap";
 
 const ProfilePage = () => {
@@ -18,6 +18,12 @@ const ProfilePage = () => {
                 setLoading(false);
             });
     }, []);
+
+    const handleDeleteRequest = () => {
+    requestAccountDeletion()
+        .then(() => alert("Your request has been sent to the manager."))
+        .catch(() => alert("Error sending request"));
+};
 
     if (loading) return <Spinner animation="border" />;
     if (error) return <Alert variant="danger">{error}</Alert>;
@@ -79,7 +85,7 @@ const ProfilePage = () => {
                         Change Password
                     </Button>
 
-                    <Button variant="danger" className="px-4">
+                    <Button variant="danger" className="px-4" onClick={handleDeleteRequest}>
                         Delete Account
                     </Button>
                 </div>

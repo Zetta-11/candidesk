@@ -13,6 +13,8 @@ public interface UserService {
 
     void changePassword(String login, String oldPassword, String newPassword);
 
+    void sendDeleteAccountRequest(String login);
+
     List<UserDto> getAllUsers();
 
     User getUserByLogin(String login);

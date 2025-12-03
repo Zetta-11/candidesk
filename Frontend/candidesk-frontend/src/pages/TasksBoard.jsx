@@ -75,8 +75,7 @@ export default function TasksBoard() {
                                                             ref={provided.innerRef}
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
-                                                            className={`card shadow-sm ${snapshot.isDragging ? "border border-info" : ""}`}
-                                                        >
+                                                            className={`card shadow-sm ${snapshot.isDragging ? "border border-info" : ""}`}>
                                                             <div className="card-body p-3">
                                                                 <h6 className="card-title">{task.title}</h6>
                                                                 <p className="card-text text-muted">{task.description}</p>
